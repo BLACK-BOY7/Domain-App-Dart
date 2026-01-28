@@ -1,5 +1,6 @@
 import '../enums/order_type.dart';
 
+
 /// Entidade que representa um comprimento associado a uma página.
 class LengthEntity {
   /// Quantidade máxima permitido para a entidade de comprimento.
@@ -8,11 +9,11 @@ class LengthEntity {
 
   /// Tamanho máximo permitido para o comprimento em milímetros.
   /// Padrão: 100.000 mm (100 metros).
-  static const int maxLengthSize = 100000; // 100 metros em milímetros
+  static const int maxLengthSize = 100_000; // 100 metros em milímetros
 
   /// Largura máxima permitida para o comprimento em milímetros.
   /// Padrão: 10.000 mm (10 metros).
-  static const int maxWidth = 10000; // 10 metros em milímetros
+  static const int maxWidth = 10_000; // 10 metros em milímetros
 
   /// Identificador único da entidade de comprimento.
   int _id = 0;
@@ -21,7 +22,7 @@ class LengthEntity {
   int get id => _id;
 
   /// Identificador da página associada à entidade de comprimento.
-  int pageId;
+  final int pageId;
 
   /// Tamanho do comprimento em milímetros.
   int _lengthSize;
@@ -76,7 +77,7 @@ class LengthEntity {
   /// Observação:
   /// - O exemplo acima so e válido ser ao registrar os comprimentos em uma pagina de pedido de forma pradonizada.
   /// Neste caso, o [registryIndex] ajuda a distinguir entre comprimentos idênticos.
-  int registryIndex;
+  final int registryIndex;
 
   /// Indica se o comprimento é o padrão do sistema, ou seja, se foi criado automaticamente pelo sistema.
   ///
@@ -141,61 +142,61 @@ class LengthEntity {
   /// Altera o tamanho do comprimento em milímetros.
   /// 
   /// Parâmetros:
-  /// - [lengthSize]: Novo tamanho do comprimento a ser definido.
+  /// - [newLengthSize]: Novo tamanho do comprimento a ser definido.
   /// 
   /// Regras:
-  /// - O [lengthSize] deve ser maior que zero.
-  /// - O [lengthSize] não pode exceder o limite máximo definido por [maxLengthSize].
+  /// - O [newLengthSize] deve ser maior que zero.
+  /// - O [newLengthSize] não pode exceder o limite máximo definido por [maxLengthSize].
   /// 
   /// Exceções:
   /// - Lança uma [ArgumentError] se as regras não forem atendidas.
-  void changeLengthSize(int lengthSize) {
-    _lengthSize = _validateLengthSize(lengthSize);
+  void changeLengthSize(int newLengthSize) {
+    _lengthSize = _validateLengthSize(newLengthSize);
   }
 
   /// Altera a quantidade atual de unidades relacionadas ao comprimento.
   /// 
   /// Parâmetros:
-  /// - [currentAmount]: Nova quantidade atual a ser definida.
+  /// - [newCurrentAmount]: Nova quantidade atual a ser definida.
   /// 
   /// Regras:
-  /// - O [currentAmount] não pode ser negativo.
-  /// - O [currentAmount] não pode exceder o limite máximo definido por [maxAmount].
+  /// - O [newCurrentAmount] não pode ser negativo.
+  /// - O [newCurrentAmount] não pode exceder o limite máximo definido por [maxAmount].
   /// 
   /// Exceções:
   /// - Lança uma [ArgumentError] se as regras não forem atendidas.
-  void changeCurrentAmount(int currentAmount) {
-    _currentAmount = _validateAmount(currentAmount);
+  void changeCurrentAmount(int newCurrentAmount) {
+    _currentAmount = _validateAmount(newCurrentAmount);
   }
 
   /// Altera a quantidade desejada de unidades relacionadas ao comprimento.
   /// 
   /// Parâmetros:
-  /// - [desiredAmount]: Nova quantidade desejada a ser definida.
+  /// - [newDesiredAmount]: Nova quantidade desejada a ser definida.
   /// 
   /// Regras:
-  /// - O [desiredAmount] não pode ser negativo.
-  /// - O [desiredAmount] não pode exceder o limite máximo definido por [maxAmount].
+  /// - O [newDesiredAmount] não pode ser negativo.
+  /// - O [newDesiredAmount] não pode exceder o limite máximo definido por [maxAmount].
   /// 
   /// Exceções:
   /// - Lança uma [ArgumentError] se as regras não forem atendidas.  
-  void changeDesiredAmount(int desiredAmount) {
-    _desiredAmount = _validateAmount(desiredAmount);
+  void changeDesiredAmount(int newDesiredAmount) {
+    _desiredAmount = _validateAmount(newDesiredAmount);
   }
 
   /// Altera a largura do comprimento em milímetros.
   /// 
   /// Parâmetros:
-  /// - [width]: Nova largura a ser definida.
+  /// - [newWidth]: Nova largura a ser definida.
   /// 
   /// Regras:
-  /// - O [width] não pode ser negativo.
-  /// - O [width] não pode exceder o limite máximo definido por [maxWidth].
+  /// - O [newWidth] não pode ser negativo.
+  /// - O [newWidth] não pode exceder o limite máximo definido por [maxWidth].
   /// 
   /// Exceções:
   /// - Lança uma [ArgumentError] se as regras não forem atendidas.
-  void changeWidth(int width) {
-    _width = _validateWidth(width);
+  void changeWidth(int newWidth) {
+    _width = _validateWidth(newWidth);
   }
 
   /// Valida o tamanho do comprimento fornecido.

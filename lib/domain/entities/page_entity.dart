@@ -1,12 +1,5 @@
-import '../enums/order_type.dart';
-
 import 'length_entity.dart';
-
-// Tarefa:
-// - falta documentar quais propiedades são usada em cada tipo de pedido.
-
-
-
+import '../enums/order_type.dart';
 
 
 /// Representa uma página do domínio.
@@ -41,7 +34,7 @@ class PageEntity {
   int get id => _id;
 
   /// Identificador da entidade do pedido associada à página.
-  int orderId;
+  final int orderId;
 
   /// Coleção interna de comprimentos associados à página.
   final List<LengthEntity> _lengths = [];
@@ -50,7 +43,7 @@ class PageEntity {
   List<LengthEntity> get lengths => List.unmodifiable(_lengths);
 
   /// Número da página.
-  int pageNumber;
+  final int pageNumber;
 
   /// Largura da bitola em milímetros.
   int _width;
@@ -58,14 +51,18 @@ class PageEntity {
   /// Largura da bitola em milímetros (somente leitura externa).
   ///
   /// Exemplo: 50m equivalem a 5 cm.
+  /// 
+  /// Observação:
+  /// - Esta propriedade é desenvolvida para ser utilizada somente para os seguintes tipos de pedidos: [OrderType.standard], [OrderType.export].
   int get width => _width;
 
   /// Espessura da bitola em milímetros.
   ///
-  /// Exemplo: 100m equivalem a 10 cm.
   int _thickness;
 
   /// Espessura da bitola em milímetros (somente leitura externa).
+  /// 
+  /// Exemplo: 100m equivalem a 10 cm.  
   int get thickness => _thickness;
 
   /// Quantidade de peças por pacote.
@@ -74,6 +71,9 @@ class PageEntity {
   /// Quantidade de peças por pacote (somente leitura externa).
   ///
   /// Exemplo: 12 peças.
+  /// 
+  /// Observação:
+  /// - Esta propriedade é desenvolvida para ser utilizada somente para os seguintes tipos de pedidos: [OrderType.standard], [OrderType.export].
   int get amount => _amount;
 
   /// Quantidade desejada de metros cúbicos.
@@ -115,7 +115,7 @@ class PageEntity {
   /// - O [id] só pode ser definido uma única vez
   ///
   /// Exceções:
-  /// - Lança um [ArgumentError] se o valor for inválido.  
+  /// - Lança um [ArgumentError] se o valor for inválido.
   /// - Lança um [StateError] se o identificador já estiver definido.
   void setId(int id) {
     if (_id != 0) {
@@ -132,15 +132,30 @@ class PageEntity {
     _id = id;
   }
 
-  /// Substitui completamente a lista de pedidos do cliente.
+  /// Remove todas as entidades [LengthEntity] da lista de comprimentos(lengths).
+  void clearAllLengthEntity() {
+    _lengths.clear();
+  }
+
+  /// Remove a entidade [LengthEntity] da lista de comprimentos(lengths) usando o [registryIndex].
+  void removeLengthRegistryIndex(int registryIndex) {
+    _lengths.removeWhere((length) => length.registryIndex == registryIndex);
+  }
+
+  /// Remove a entidade [LengthEntity] da lista de comprimentos(lengths) usando a entidade [LengthEntity].
+  void removeLengthEntity(LengthEntity lengthEntity) {
+    _lengths.remove(lengthEntity);
+  }
+
+  /// Substitui completamente a lista de comprimentos da página.
   ///
   /// A coleção atual de comprimentos é limpa antes da adição dos novos comprimentos[LengthEntity].
-  /// 
+  ///
   /// Exceções:
   /// - Lança um [StateError] se algum item da coleção ter o [LengthEntity.pageId] diferente de [PageEntity.id].
-  void addOrders(List<LengthEntity> lengths) {
+  void addLengths(List<LengthEntity> lengths) {
     _lengths.clear();
-    lengths.forEach(addOrder);
+    lengths.forEach(addLength);
   }
 
   /// Adiciona um comprimento a página.
@@ -149,7 +164,7 @@ class PageEntity {
   ///
   /// Exceções:
   /// - Lança um [StateError] se [LengthEntity.pageId] for diferente de [PageEntity.id].
-  void addOrder(LengthEntity lengthEntity) {
+  void addLength(LengthEntity lengthEntity) {
     if (lengthEntity.pageId != id) {
       throw StateError(
         'LengthEntity.pageId=${lengthEntity.pageId} não corresponde ao PageEntity.id=$id',
@@ -161,61 +176,61 @@ class PageEntity {
   /// Altera a largura da bitola em milímetros.
   ///
   /// Parâmetros:
-  /// - [width]: Nova largura a ser definida.
+  /// - [newWidth]: Nova largura a ser definida.
   ///
   /// Regras:
-  /// - O [width] não pode ser negativo.
-  /// - O [width] não pode exceder o limite máximo definido por [maxWidth].
+  /// - O [newWidth] não pode ser negativo.
+  /// - O [newWidth] não pode exceder o limite máximo definido por [maxWidth].
   ///
   /// Exceções:
   /// - Lança uma [ArgumentError] se as regras não forem atendidas.
-  void changeWidth(int width) {
-    _width = _validateWidth(width);
+  void changeWidth(int newWidth) {
+    _width = _validateWidth(newWidth);
   }
 
   /// Altera a espessura da bitola em milímetros.
   ///
   /// Parâmetros:
-  /// - [thickness]: Nova espessura a ser definida.
+  /// - [newThickness]: Nova espessura a ser definida.
   ///
   /// Regras:
-  /// - O [thickness] não pode ser negativo.
-  /// - O [thickness] não pode exceder o limite máximo definido por [maxThickness].
+  /// - O [newThickness] não pode ser negativo.
+  /// - O [newThickness] não pode exceder o limite máximo definido por [maxThickness].
   ///
   /// Exceções:
   /// - Lança uma [ArgumentError] se as regras não forem atendidas.
-  void changeThickness(int thickness) {
-    _thickness = _validateThickness(thickness);
+  void changeThickness(int newThickness) {
+    _thickness = _validateThickness(newThickness);
   }
 
   /// Altera a quantidade de peças por pacote em unidades.
   ///
   /// Parâmetros:
-  /// - [amount]: Nova quantidade a ser definida.
+  /// - [newAmount]: Nova quantidade a ser definida.
   ///
   /// Regras:
-  /// - O [amount] não pode ser negativo.
-  /// - O [amount] não pode exceder o limite máximo definido por [maxAmount].
+  /// - O [newAmount] não pode ser negativo.
+  /// - O [newAmount] não pode exceder o limite máximo definido por [maxAmount].
   ///
   /// Exceções:
   /// - Lança uma [ArgumentError] se as regras não forem atendidas.
-  void changeAmount(int amount) {
-    _amount = _validateAmount(amount);
+  void changeAmount(int newAmount) {
+    _amount = _validateAmount(newAmount);
   }
 
   /// Altera o volume cubico desejado em decímetro cubico.
   ///
   /// Parâmetros:
-  /// - [desiredCubicMeters]: Novo volume cubico desejado a ser definida.
+  /// - [newDesiredCubicMeters]: Novo volume cubico desejado a ser definida.
   ///
   /// Regras:
-  /// - O [desiredCubicMeters] não pode ser negativo.
-  /// - O [desiredCubicMeters] não pode exceder o limite máximo definido por [maxDesiredCubicMeters].
+  /// - O [newDesiredCubicMeters] não pode ser negativo.
+  /// - O [newDesiredCubicMeters] não pode exceder o limite máximo definido por [maxDesiredCubicMeters].
   ///
   /// Exceções:
   /// - Lança uma [ArgumentError] se as regras não forem atendidas.
-  void changeDesiredCubicMeters(int desiredCubicMeters) {
-    _desiredCubicMeters = _validateDesiredCubicMeters(desiredCubicMeters);
+  void changeDesiredCubicMeters(int newDesiredCubicMeters) {
+    _desiredCubicMeters = _validateDesiredCubicMeters(newDesiredCubicMeters);
   }
 
   /// Valida a largura fornecida.
