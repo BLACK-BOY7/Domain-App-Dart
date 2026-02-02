@@ -50,10 +50,7 @@ class PageEntity {
 
   /// Largura da bitola em milímetros (somente leitura externa).
   ///
-  /// Exemplo: 50m equivalem a 5 cm.
-  /// 
-  /// Observação:
-  /// - Esta propriedade é desenvolvida para ser utilizada somente para os seguintes tipos de pedidos: [OrderType.standard], [OrderType.export].
+  /// Exemplo: 50mm equivalem a 5 cm.    
   int get width => _width;
 
   /// Espessura da bitola em milímetros.
@@ -62,7 +59,7 @@ class PageEntity {
 
   /// Espessura da bitola em milímetros (somente leitura externa).
   /// 
-  /// Exemplo: 100m equivalem a 10 cm.  
+  /// Exemplo: 100mm equivalem a 10 cm.  
   int get thickness => _thickness;
 
   /// Quantidade de peças por pacote.
@@ -71,9 +68,6 @@ class PageEntity {
   /// Quantidade de peças por pacote (somente leitura externa).
   ///
   /// Exemplo: 12 peças.
-  /// 
-  /// Observação:
-  /// - Esta propriedade é desenvolvida para ser utilizada somente para os seguintes tipos de pedidos: [OrderType.standard], [OrderType.export].
   int get amount => _amount;
 
   /// Quantidade desejada de metros cúbicos.
@@ -245,11 +239,11 @@ class PageEntity {
   /// Exceções:
   /// - Lança uma [ArgumentError] se as regras não forem atendidas.
   static int _validateWidth(int width) {
-    if (width <= 0 || width > maxWidth) {
+    if (width < 0 || width > maxWidth) {
       throw ArgumentError.value(
         width,
         "width",
-        "A largura deve ser maior que zero e não pode exceder $maxWidth mm.",
+        "A largura deve ser maior ou igual a zero e não pode exceder $maxWidth mm.",
       );
     }
     return width;
@@ -271,7 +265,7 @@ class PageEntity {
       throw ArgumentError.value(
         thickness,
         "thickness",
-        "A espessura dever ser maior que zero e não pode exceder $maxThickness mm.",
+        "A espessura deve ser maior ou igual a zero e não pode exceder $maxThickness mm.",
       );
     }
     return thickness;
@@ -289,7 +283,7 @@ class PageEntity {
   /// Exceções:
   /// - Lança uma [ArgumentError] se as regras não forem atendidas.
   static int _validateAmount(int amount) {
-    if (amount < 0 || amount < maxAmount) {
+    if (amount < 0 || amount > maxAmount) {
       throw ArgumentError.value(
         amount,
         "amount",

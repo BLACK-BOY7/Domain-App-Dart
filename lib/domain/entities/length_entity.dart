@@ -1,6 +1,5 @@
 import '../enums/order_type.dart';
 
-
 /// Entidade que representa um comprimento associado a uma página.
 class LengthEntity {
   /// Quantidade máxima permitido para a entidade de comprimento.
@@ -10,10 +9,6 @@ class LengthEntity {
   /// Tamanho máximo permitido para o comprimento em milímetros.
   /// Padrão: 100.000 mm (100 metros).
   static const int maxLengthSize = 100_000; // 100 metros em milímetros
-
-  /// Largura máxima permitida para o comprimento em milímetros.
-  /// Padrão: 10.000 mm (10 metros).
-  static const int maxWidth = 10_000; // 10 metros em milímetros
 
   /// Identificador único da entidade de comprimento.
   int _id = 0;
@@ -40,10 +35,7 @@ class LengthEntity {
 
   /// Quantidade atual de unidades relacionadas ao comprimento (somente leitura externa).
   ///
-  /// Pode ser usada para rastrear o progresso ou status atual.
-  ///
-  /// Observação:
-  /// - Esta propriedade é desenvolvida para ser utilizada somente para os seguintes tipos de pedidos: [OrderType.standard], [OrderType.export].
+  /// Pode ser usada para rastrear o progresso ou status atual.    
   int get currentAmount => _currentAmount;
 
   /// Quantidade desejada de unidades relacionadas ao comprimento.
@@ -51,22 +43,8 @@ class LengthEntity {
 
   /// Quantidade desejada de unidades relacionadas ao comprimento (somente leitura externa).
   ///
-  /// Pode ser usada para definir uma meta ou objetivo.
-  ///
-  /// Observação:
-  /// - Esta propriedade é desenvolvida para ser utilizada somente para os seguintes tipos de pedidos: [OrderType.standard], [OrderType.export].
+  /// Pode ser usada para definir uma meta ou objetivo.    
   int get desiredAmount => _desiredAmount;
-
-  /// Largura do comprimento em milímetros.
-  int _width;
-
-  /// Largura do comprimento em milímetros (somente leitura externa).
-  ///
-  /// Representa a medida da largura em milímetros.
-  ///
-  /// Observação:
-  /// - Esta propriedade é desenvolvida para ser utilizada somente para o seguinte tipo de pedido: [OrderType.allWidths].
-  int get width => _width;
 
   /// Índice do registro do comprimento.
   ///
@@ -97,7 +75,6 @@ class LengthEntity {
   /// Parâmetros opcionais:
   /// - [currentAmount]: Quantidade atual (padrão é 0) limitada por [maxAmount].
   /// - [desiredAmount]: Quantidade desejada (padrão é 0) limitada por [maxAmount].
-  /// - [width]: Largura do comprimento em milímetros (padrão é 0) limitada por [maxWidth].
   /// - [isSystemDefault]: Indica se é padrão do sistema (padrão é true).
   ///
   /// Exceções:
@@ -110,10 +87,9 @@ class LengthEntity {
     int desiredAmount = 0,
     int width = 0,
     this.isSystemDefault = true,
-  })  : _lengthSize = _validateLengthSize(lengthSize),
-        _currentAmount = _validateAmount(currentAmount),
-        _desiredAmount = _validateAmount(desiredAmount),
-        _width = _validateWidth(width);
+  }) : _lengthSize = _validateLengthSize(lengthSize),
+       _currentAmount = _validateAmount(currentAmount),
+       _desiredAmount = _validateAmount(desiredAmount);
 
   /// Define o identificador único da entidade de comprimento.
   ///
@@ -140,14 +116,14 @@ class LengthEntity {
   }
 
   /// Altera o tamanho do comprimento em milímetros.
-  /// 
+  ///
   /// Parâmetros:
   /// - [newLengthSize]: Novo tamanho do comprimento a ser definido.
-  /// 
+  ///
   /// Regras:
   /// - O [newLengthSize] deve ser maior que zero.
   /// - O [newLengthSize] não pode exceder o limite máximo definido por [maxLengthSize].
-  /// 
+  ///
   /// Exceções:
   /// - Lança uma [ArgumentError] se as regras não forem atendidas.
   void changeLengthSize(int newLengthSize) {
@@ -155,14 +131,14 @@ class LengthEntity {
   }
 
   /// Altera a quantidade atual de unidades relacionadas ao comprimento.
-  /// 
+  ///
   /// Parâmetros:
   /// - [newCurrentAmount]: Nova quantidade atual a ser definida.
-  /// 
+  ///
   /// Regras:
   /// - O [newCurrentAmount] não pode ser negativo.
   /// - O [newCurrentAmount] não pode exceder o limite máximo definido por [maxAmount].
-  /// 
+  ///
   /// Exceções:
   /// - Lança uma [ArgumentError] se as regras não forem atendidas.
   void changeCurrentAmount(int newCurrentAmount) {
@@ -170,33 +146,18 @@ class LengthEntity {
   }
 
   /// Altera a quantidade desejada de unidades relacionadas ao comprimento.
-  /// 
+  ///
   /// Parâmetros:
   /// - [newDesiredAmount]: Nova quantidade desejada a ser definida.
-  /// 
+  ///
   /// Regras:
   /// - O [newDesiredAmount] não pode ser negativo.
   /// - O [newDesiredAmount] não pode exceder o limite máximo definido por [maxAmount].
-  /// 
-  /// Exceções:
-  /// - Lança uma [ArgumentError] se as regras não forem atendidas.  
-  void changeDesiredAmount(int newDesiredAmount) {
-    _desiredAmount = _validateAmount(newDesiredAmount);
-  }
-
-  /// Altera a largura do comprimento em milímetros.
-  /// 
-  /// Parâmetros:
-  /// - [newWidth]: Nova largura a ser definida.
-  /// 
-  /// Regras:
-  /// - O [newWidth] não pode ser negativo.
-  /// - O [newWidth] não pode exceder o limite máximo definido por [maxWidth].
-  /// 
+  ///
   /// Exceções:
   /// - Lança uma [ArgumentError] se as regras não forem atendidas.
-  void changeWidth(int newWidth) {
-    _width = _validateWidth(newWidth);
+  void changeDesiredAmount(int newDesiredAmount) {
+    _desiredAmount = _validateAmount(newDesiredAmount);
   }
 
   /// Valida o tamanho do comprimento fornecido.
@@ -225,7 +186,7 @@ class LengthEntity {
   ///
   /// Parâmetros:
   /// - [amount]: Quantidade a ser validada.
-  /// 
+  ///
   /// Regras:
   /// - O [amount] não pode ser negativo.
   /// - O [amount] não pode exceder o limite máximo definido por [maxAmount].
@@ -241,27 +202,5 @@ class LengthEntity {
       );
     }
     return amount;
-  }
-
-  /// Valida a largura fornecida.
-  ///
-  /// Parâmetros:
-  /// - [width]: Largura a ser validada.
-  ///
-  /// Regras:
-  /// - O [width] não pode ser negativo.
-  /// - O [width] não pode exceder o limite máximo definido por [maxWidth].
-  ///
-  /// Exceções:
-  /// - Lança uma [ArgumentError] se as regras não forem atendidas.
-  static int _validateWidth(int width) {
-    if (width < 0 || width > maxWidth) {
-      throw ArgumentError.value(
-        width,
-        "width",
-        "A largura deve ser maior ou igual a zero e não pode exceder $maxWidth mm.",
-      );
-    }
-    return width;
   }
 }
