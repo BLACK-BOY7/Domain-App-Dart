@@ -1,7 +1,6 @@
 import 'length_entity.dart';
 import '../enums/order_type.dart';
 
-
 /// Representa uma página do domínio.
 ///
 /// Uma página está associada a uma entidade de pedido e contém múltiplas entidades de comprimento.
@@ -50,7 +49,7 @@ class PageEntity {
 
   /// Largura da bitola em milímetros (somente leitura externa).
   ///
-  /// Exemplo: 50mm equivalem a 5 cm.    
+  /// Exemplo: 50mm equivalem a 5 cm.
   int get width => _width;
 
   /// Espessura da bitola em milímetros.
@@ -58,8 +57,8 @@ class PageEntity {
   int _thickness;
 
   /// Espessura da bitola em milímetros (somente leitura externa).
-  /// 
-  /// Exemplo: 100mm equivalem a 10 cm.  
+  ///
+  /// Exemplo: 100mm equivalem a 10 cm.
   int get thickness => _thickness;
 
   /// Quantidade de peças por pacote.

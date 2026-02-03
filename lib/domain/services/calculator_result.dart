@@ -2,6 +2,7 @@ import 'package:decimal/decimal.dart';
 
 import '../enums/order_type.dart';
 import '../entities/page_entity.dart';
+import '../entities/order_entity.dart';
 
 class CalculatorResult {
   /// Usado para calculor da bitola de exportação.
@@ -10,8 +11,16 @@ class CalculatorResult {
   /// Usado para divisão do calculor da bitola.
   static final Decimal _divisorSectionArea = Decimal.fromInt(1_000_000);
 
+  /// Retora o totla de metros cubicos indepedente do tipo do pedido.
+  static Decimal getTotalCubicMeters(OrderEntity orderEntity) {
+    if (orderEntity.orderType == OrderType.standard) {
+      return getTotalCubicMetersStandard(orderEntity.pages);
+    }
+    return getTotalCubicMetersExport(orderEntity.pages);
+  }
+
   /// Retorna o total de metros cubicos para uma lista de páginas do tipo: [OrderType.standard].
-  /// 
+  ///
   /// Parâmetros:
   /// - [pages]: Lista de páginas para calcular o total de metros cúbicos.
   static Decimal getTotalCubicMetersStandard(List<PageEntity> pages) {
@@ -25,7 +34,7 @@ class CalculatorResult {
   }
 
   /// Retorna o total de metros cubicos para uma lista de páginas do tipo: [OrderType.export].
-  /// 
+  ///
   /// Parâmetros:
   /// - [pages]: Lista de páginas para calcular o total de metros cúbicos.
   static Decimal getTotalCubicMetersExport(List<PageEntity> pages) {
@@ -53,7 +62,7 @@ class CalculatorResult {
   }
 
   /// Retorna o total de metros lineares de uma lista de páginas.
-  /// 
+  ///
   /// Parâmetros:
   /// - [pages]: Lista de páginas para calcular o total de metros lineares.
   static Decimal getTotalLinearMetersOfPages(List<PageEntity> pages) {
@@ -70,7 +79,9 @@ class CalculatorResult {
   static Decimal getTotalLinearMetersOfPage(PageEntity pageEntity) {
     int totalLinearMeters = 0;
     for (var length in pageEntity.lengths) {
-      totalLinearMeters += (length.lengthSize * length.currentAmount);
+      totalLinearMeters += pageEntity.amount > 0
+          ? (length.lengthSize * length.currentAmount * pageEntity.amount)
+          : (length.lengthSize * length.currentAmount);
     }
     return (Decimal.fromInt(totalLinearMeters) / Decimal.fromInt(1_000))
         .toDecimal();
@@ -80,11 +91,6 @@ class CalculatorResult {
   static Decimal getSectionAreaStandard(PageEntity pageEntity) {
     final Decimal width = Decimal.fromInt(pageEntity.width);
     final Decimal thickness = Decimal.fromInt(pageEntity.thickness);
-    final Decimal amount = Decimal.fromInt(pageEntity.amount);
-
-    if (amount > Decimal.zero) {
-      return ((width * thickness * amount) / _divisorSectionArea).toDecimal();
-    }
 
     return ((width * thickness) / _divisorSectionArea).toDecimal();
   }

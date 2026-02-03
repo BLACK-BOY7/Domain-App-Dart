@@ -85,7 +85,6 @@ class LengthEntity {
     required this.registryIndex,
     int currentAmount = 0,
     int desiredAmount = 0,
-    int width = 0,
     this.isSystemDefault = true,
   }) : _lengthSize = _validateLengthSize(lengthSize),
        _currentAmount = _validateAmount(currentAmount),

@@ -22,7 +22,7 @@ class ClientEntity {
   final String name;
 
   /// Inicializa uma nova instância de [ClientEntity] com o nome informado.
-  ClientEntity(this.name);
+  ClientEntity({required this.name});
 
   /// Define o identificador do cliente caso ele ainda não tenha sido definido.
   ///
@@ -43,7 +43,7 @@ class ClientEntity {
         "id",
         "O ID deve ser um valor válido maior que zero.",
       );
-    }  
+    }
     _id = id;
   }
 
